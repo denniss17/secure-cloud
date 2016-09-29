@@ -1,7 +1,6 @@
-import logging
-
-from watchdog.events import LoggingEventHandler
 from watchdog.observers import Observer
+
+from watcher.local_directory_event_handler import LocalDirectoryEventHandler
 
 
 class LocalDirectoryWatcher(object):
@@ -10,13 +9,13 @@ class LocalDirectoryWatcher(object):
         self.observer = None  # type: Observer
 
     def start(self):
-        logging.basicConfig(level=logging.INFO,
-                            format='%(asctime)s - %(message)s',
-                            datefmt='%Y-%m-%d %H:%M:%S')
-        event_handler = LoggingEventHandler()
+        event_handler = LocalDirectoryEventHandler()
         self.observer = Observer()
         self.observer.schedule(event_handler, self.path, recursive=True)
         self.observer.start()
 
     def stop(self):
+        self.observer.stop()
+
+    def join(self):
         self.observer.join()

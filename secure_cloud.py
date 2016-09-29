@@ -1,3 +1,4 @@
+import logging
 import os
 from os import path
 
@@ -10,18 +11,24 @@ from watcher.local_directory_watcher import LocalDirectoryWatcher
 class SecureCloud(object):
     def __init__(self):
         self.local_directory_watcher = None  # type: LocalDirectoryWatcher
-        self.config = None  # type: SecureCloudConfig
+
+    def check_directories(self):
+        if not path.exists(SecureCloudConfig.local_directory):
+            os.makedirs(SecureCloudConfig.local_directory)
+        if not path.exists(SecureCloudConfig.temporary_directory):
+            os.makedirs(SecureCloudConfig.temporary_directory)
 
     def start(self):
-        self.config = SecureCloudConfig()
-        if not path.exists(self.config.local_directory):
-            os.makedirs(self.config.local_directory)
-        self.local_directory_watcher = LocalDirectoryWatcher(self.config.local_directory)
+        logging.basicConfig(level=logging.INFO,
+                            format='%(asctime)s - %(message)s',
+                            datefmt='%Y-%m-%d %H:%M:%S')
+        self.check_directories()
+        self.local_directory_watcher = LocalDirectoryWatcher(SecureCloudConfig.local_directory)
         self.local_directory_watcher.start()
 
     def stop(self):
         self.local_directory_watcher.stop()
-
+        self.local_directory_watcher.join()
 
 if __name__ == '__main__':
     secure_cloud = SecureCloud()
@@ -31,4 +38,3 @@ if __name__ == '__main__':
             time.sleep(1)
     except KeyboardInterrupt:
         secure_cloud.stop()
-    secure_cloud.local_directory_watcher.join()

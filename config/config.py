@@ -1,5 +1,6 @@
-class SecureCloudConfig(object):
+from os import path
 
-    @property
-    def local_directory(self):
-        return 'temp'
+
+class SecureCloudConfig(object):
+    local_directory = path.abspath('storage')
+    temporary_directory = path.abspath('temp')
