@@ -8,8 +8,6 @@ cache: pip
 before_install:
 # Update the pacakge repository
 - sudo apt-get -qq update
-# Make sure python development tools are installed
-- sudo apt-get install -y python-dev python-setuptools
 # Install GMP (The GNU Multiple Precision Arithmetic Library)
 - sudo apt-get install -y libgmp10 libgmp-dev libgmp3c2
 # Install PBC (The Pairing-Based Cryptography Library)
@@ -29,6 +27,5 @@ install:
 - make install -C ./charm
 # Install other requirements
 - pip install -r requirements.txt
-- pip install -r test-requirements.txt
 script:
 - mypy . -s --check-untyped-defs && nosetests --with-doctest
