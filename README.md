@@ -1,8 +1,19 @@
 # SecureCloud
 
+Master: [![Build Status](https://travis-ci.org/denniss17/secure-cloud.svg?branch=master)](https://travis-ci.org/denniss17/secure-cloud)
+Develop: [![Build Status](https://travis-ci.org/denniss17/secure-cloud.svg?branch=develop)](https://travis-ci.org/denniss17/secure-cloud)
+
 Protect your precious files in the cloud. SecureCloud employs end-to-end encryption, while still giving you the
 opportunity to share your files with other users. All this time, you are the boss! 
 You manage the file access and you only have the keys. The keys are not stored in cloud.
+
+## Project setup
+
+## Testing
+
+## Installation
+
+## Running
 
 ## FAQ
 
