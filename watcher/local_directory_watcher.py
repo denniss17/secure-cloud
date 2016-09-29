@@ -4,7 +4,7 @@ from watcher.local_directory_event_handler import LocalDirectoryEventHandler
 
 
 class LocalDirectoryWatcher(object):
-    def __init__(self, path: str):
+    def __init__(self, path: str) -> None:
         self.path = path
         self.observer = None  # type: Observer
 

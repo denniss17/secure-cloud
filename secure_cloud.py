@@ -9,16 +9,16 @@ from watcher.local_directory_watcher import LocalDirectoryWatcher
 
 
 class SecureCloud(object):
-    def __init__(self):
+    def __init__(self) -> None:
         self.local_directory_watcher = None  # type: LocalDirectoryWatcher
 
-    def check_directories(self):
+    def check_directories(self) -> None:
         if not path.exists(SecureCloudConfig.local_directory):
             os.makedirs(SecureCloudConfig.local_directory)
         if not path.exists(SecureCloudConfig.temporary_directory):
             os.makedirs(SecureCloudConfig.temporary_directory)
 
-    def start(self):
+    def start(self) -> None:
         logging.basicConfig(level=logging.INFO,
                             format='%(asctime)s - %(message)s',
                             datefmt='%Y-%m-%d %H:%M:%S')
@@ -26,7 +26,7 @@ class SecureCloud(object):
         self.local_directory_watcher = LocalDirectoryWatcher(SecureCloudConfig.local_directory)
         self.local_directory_watcher.start()
 
-    def stop(self):
+    def stop(self) -> None:
         self.local_directory_watcher.stop()
         self.local_directory_watcher.join()
 

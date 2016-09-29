@@ -1,20 +1,26 @@
 import os
-from os import path
-
 import shutil
-from watchdog.events import FileSystemEventHandler
+from os import path
+from typing import Union
+
+from watchdog.events import FileSystemEventHandler, DirCreatedEvent, FileCreatedEvent, DirDeletedEvent, \
+    FileDeletedEvent, \
+    DirModifiedEvent, FileModifiedEvent, DirMovedEvent, FileMovedEvent
 
 from config.config import SecureCloudConfig
 
 
 class LocalDirectoryEventHandler(FileSystemEventHandler):
-    def get_path_relative_to_local_directory(self, file_path):
+    @staticmethod
+    def get_path_relative_to_local_directory(file_path: str) -> str:
         return file_path.replace(path.commonprefix([SecureCloudConfig.local_directory, file_path]), "").lstrip('/\\')
 
-    def get_mapped_location(self, file_path):
-        return path.join(SecureCloudConfig.temporary_directory, self.get_path_relative_to_local_directory(file_path))
+    @staticmethod
+    def get_mapped_location(file_path: str) -> str:
+        return path.join(SecureCloudConfig.temporary_directory,
+                         LocalDirectoryEventHandler.get_path_relative_to_local_directory(file_path))
 
-    def on_moved(self, event):
+    def on_moved(self, event: Union[DirMovedEvent, FileMovedEvent]):
         """Called when a file or a directory is moved or renamed.
 
         :param event:
@@ -26,7 +32,7 @@ class LocalDirectoryEventHandler(FileSystemEventHandler):
         print("Move to  ", event.dest_path, "=>", self.get_mapped_location(event.dest_path))
         shutil.move(self.get_mapped_location(event.src_path), self.get_mapped_location(event.dest_path))
 
-    def on_created(self, event):
+    def on_created(self, event: Union[DirCreatedEvent, FileCreatedEvent]) -> None:
         """Called when a file or directory is created.
 
         :param event:
@@ -40,7 +46,7 @@ class LocalDirectoryEventHandler(FileSystemEventHandler):
         else:
             shutil.copy(event.src_path, self.get_mapped_location(event.src_path))
 
-    def on_deleted(self, event):
+    def on_deleted(self, event: Union[DirDeletedEvent, FileDeletedEvent]):
         """Called when a file or directory is deleted.
 
         :param event:
@@ -54,7 +60,7 @@ class LocalDirectoryEventHandler(FileSystemEventHandler):
         else:
             os.remove(self.get_mapped_location(event.src_path))
 
-    def on_modified(self, event):
+    def on_modified(self, event: Union[DirModifiedEvent, FileModifiedEvent]):
         """Called when a file or directory is modified.
 
         :param event:
